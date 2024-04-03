@@ -136,14 +136,11 @@ const f = "200";
 console.log(`${e} + ${f} = ${e.plus(f)}`);
 console.log(`${e} - ${f} = ${e.minus(f)}`);
 console.log(`${e} * ${f} = ${e.multiply(f)}`);
-console.log(`${e} / ${f} = ${e.divide(f)}`);
+console.log(`${e} / ${f} = ${e.divide(f)}`, "\n");
 
-console.log(`1 * 1 = ${"1".multiply("1")}`); // 1
-
-console.log(`100 - 100 = ${"100".minus("100")}`); // 0
-
-console.log(`12345 / 1 = ${"12345".divide("1")}`); // 12345
-
+console.log(`1 * 1 = ${"1".multiply("1")}`);
+console.log(`100 - 100 = ${"100".minus("100")}`);
+console.log(`12345 / 1 = ${"12345".divide("1")}`);
 console.log(`12345 / 0 = ${"12345".divide("0")}`);
 
 
