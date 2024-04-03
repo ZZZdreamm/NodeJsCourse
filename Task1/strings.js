@@ -134,5 +134,7 @@ console.log(`${e} - ${f} = ${e.minus(f)}`);
 console.log(`${e} * ${f} = ${e.multiply(f)}`);
 console.log(`${e} / ${f} = ${e.divide(f)}`);
 
+console.log(`1 * 1 = ${"1".multiply("1")}`); // 1
+
 
 // Algorithm is correct and works as expected. Also, it works if second number is bigger than first number.
