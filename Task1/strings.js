@@ -56,7 +56,7 @@ function subtractStrings(str1, str2) {
       result = "-" + result;
     }
 
-    return result;
+    return result || "0";
   }
 
 function multiplyStrings(str1, str2) {
@@ -79,6 +79,10 @@ function multiplyStrings(str1, str2) {
 function divideStrings(dividend, divisor) {
   let quotient = "";
   let remainder = "";
+
+  if(divisor === "0") {
+    return "Error: Division by zero";
+  }
 
   for (let i = 0; i < dividend.length; i++) {
     remainder += dividend[i];
@@ -135,6 +139,12 @@ console.log(`${e} * ${f} = ${e.multiply(f)}`);
 console.log(`${e} / ${f} = ${e.divide(f)}`);
 
 console.log(`1 * 1 = ${"1".multiply("1")}`); // 1
+
+console.log(`100 - 100 = ${"100".minus("100")}`); // 0
+
+console.log(`12345 / 1 = ${"12345".divide("1")}`); // 12345
+
+console.log(`12345 / 0 = ${"12345".divide("0")}`);
 
 
 // Algorithm is correct and works as expected. Also, it works if second number is bigger than first number.
