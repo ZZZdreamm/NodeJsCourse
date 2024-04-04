@@ -87,6 +87,7 @@ function divideStrings(dividend, divisor) {
   for (let i = 0; i < dividend.length; i++) {
     remainder += dividend[i];
     let quotientDigit = 0;
+    remainder = remainder.replace(/^0+/, "");
     while (subtractStrings(remainder, divisor) >= "0") {
       remainder = subtractStrings(remainder, divisor);
       quotientDigit++;
@@ -94,7 +95,6 @@ function divideStrings(dividend, divisor) {
 
     quotient += quotientDigit;
   }
-
   return quotient.replace(/^0+/, "") || "0";
 }
 
@@ -143,5 +143,10 @@ console.log(`100 - 100 = ${"100".minus("100")}`);
 console.log(`12345 / 1 = ${"12345".divide("1")}`);
 console.log(`12345 / 0 = ${"12345".divide("0")}`);
 
+
+const g = "4444444444444444444000000000000000000000000000"
+const h = "2"
+
+console.log(`${g} / ${h} = ${g.divide(h)}`)
 
 // Algorithm is correct and works as expected. Also, it works if second number is bigger than first number.
