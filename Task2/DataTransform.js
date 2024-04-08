@@ -23,7 +23,7 @@ const DataTransform = {
       if (typeof value === 'boolean') {
         return !value;
       } else {
-        throw new Error('Error: Argument is not a boolean');
+        throw new Error('Argument is not a boolean');
       }
     },
 
@@ -97,7 +97,7 @@ const DataTransform = {
       },
 
     mapFields: (basicClass, convertedClass) => {
-        // I declare empty instance of the class to have access to its fields names
+        // I declare empty instance of the class to have access to names of its fields
         const classInstance = new convertedClass();
         const mappedObject = {};
         for (const field in classInstance) {
