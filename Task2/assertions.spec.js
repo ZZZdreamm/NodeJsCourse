@@ -36,7 +36,6 @@ describe('DataTransform', () => {
         it('should concatenate a number and a string', () => {
             expect(DataTransform.addValues(5, ' World')).toEqual('5 World');
         });
-
         it('should add true and false and return true', () => {
             expect(DataTransform.addValues(true, false)).toEqual(true)
         });
@@ -47,6 +46,15 @@ describe('DataTransform', () => {
 
         it('should add two bigints', () => {
             expect(DataTransform.addValues(1n, 2n)).toEqual(3n);
+        });
+
+        it('concatenate two arrays', () => {
+            expect(DataTransform.addValues([1, 2], [3, 4])).toEqual([1, 2, 3, 4]);
+        });
+
+        it('concatenate an array and a not array', () => {
+            expect(DataTransform.addValues([1, 2], 3)).toEqual([1, 2, 3]);
+            expect(DataTransform.addValues([1, 2], "str")).toEqual([1, 2, 'str']);
         });
 
     });

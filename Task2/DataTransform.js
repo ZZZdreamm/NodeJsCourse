@@ -1,10 +1,9 @@
 const DataTransform = {
   addValues: (a, b) => {
+    console.log(typeof a, typeof b)
     if (typeof a === "number" && typeof b === "number") {
       return a + b;
-    } else if (typeof a === "string" || typeof b === "string") {
-      return a + b
-    } else if (
+    }  else if (
       (typeof a === "number" && typeof b === "string") ||
       (typeof a === "string" && typeof b === "number")
     ) {
@@ -13,7 +12,14 @@ const DataTransform = {
       return a || b;
     } else if (typeof a === 'bigint' && typeof b === 'bigint'){
       return a + b;
-    }else {
+    } else if (Array.isArray(a) && Array.isArray(b)){
+      return a.concat(b);
+    } else if (Array.isArray(a) && !Array.isArray(b)){
+      a.push(b);
+      return a;
+    } else if (typeof a === "string" || typeof b === "string") {
+      return a + b
+    } else {
       throw new Error("Addition not possible for given types");
     }
   },
