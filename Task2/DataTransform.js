@@ -97,10 +97,8 @@ const DataTransform = {
       },
 
     _mapFields: (basicClassInstance, convertedClassType) => {
-        // I declare empty instance of the class to have access to names of its fields
-        const classInstance = new convertedClassType();
-        const mappedObject = {};
-        for (const field in classInstance) {
+        const mappedObject = new convertedClassType();
+        for (const field in mappedObject) {
           if (basicClassInstance.hasOwnProperty(field)) {
             mappedObject[field] = basicClassInstance[field];
           }else{

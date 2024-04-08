@@ -124,7 +124,6 @@ describe('DataTransform', () => {
     describe('coerceToType', () => {
         it('should coerce a string to a boolean', () => {
             expect(DataTransform.coerceToType('true', 'boolean')).toEqual(true);
-            // expect(DataTransform.coerceToType('false', 'boolean')).toEqual(false);
         });
 
         it('should coerce a number to a string', () => {
@@ -174,7 +173,17 @@ describe('DataTransform', () => {
         it('should map fields of a basic class to converted class', () => {
             const basicClass = new User(1, 'John Doe', 'john@example.com');
             const convertedClass = UserDTO;
-            const mappedObject = DataTransform.mapFields(basicClass, convertedClass);
+            const mappedObject = DataTransform._mapFields(basicClass, convertedClass);
+            expect(mappedObject).toBeInstanceOf(UserDTO);
+            expect(mappedObject.id).toEqual(1);
+            expect(mappedObject.name).toEqual('John Doe');
+        });
+
+        it('should map fields of a converted class to basic class', () => {
+            const basicClass = new UserDTO(1, 'John Doe');
+            const convertedClass = User;
+            const mappedObject = DataTransform._mapFields(basicClass, convertedClass);
+            expect(mappedObject).toBeInstanceOf(User);
             expect(mappedObject.id).toEqual(1);
             expect(mappedObject.name).toEqual('John Doe');
             expect(mappedObject.email).toBeUndefined();
@@ -183,15 +192,14 @@ describe('DataTransform', () => {
         it('should map fields even if there are extra fields in basic class', () => {
             const basicClass = new NotAUser('field1', 'field2', 'field3');
             const convertedClass = UserDTO;
-            const mappedObject = DataTransform.mapFields(basicClass, convertedClass);
-            expect(mappedObject.id).toBeUndefined();
-            expect(mappedObject.name).toBeUndefined();
+            const mappedObject = DataTransform._mapFields(basicClass, convertedClass);
+            expect(mappedObject).toEqual({})
         });
 
         it('should return an empty object if basic class is empty', () => {
             const basicClass = {};
             const convertedClass = UserDTO;
-            const mappedObject = DataTransform.mapFields(basicClass, convertedClass);
+            const mappedObject = DataTransform._mapFields(basicClass, convertedClass);
             expect(mappedObject).toEqual({});
         });
     });
