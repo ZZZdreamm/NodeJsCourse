@@ -37,11 +37,18 @@ describe('DataTransform', () => {
             expect(DataTransform.addValues(5, ' World')).toEqual('5 World');
         });
 
-        it('should throw an error when trying to add boolean values', () => {
-            expect(() => {
-                DataTransform.addValues(true, false);
-            }).toThrow();
+        it('should add true and false and return true', () => {
+            expect(DataTransform.addValues(true, false)).toEqual(true)
         });
+
+        it('add false and false and return false', () => {
+            expect(DataTransform.addValues(false, false)).toEqual(false);
+        });
+
+        it('should add two bigints', () => {
+            expect(DataTransform.addValues(1n, 2n)).toEqual(3n);
+        });
+
     });
 
     describe('stringifyValue', () => {
