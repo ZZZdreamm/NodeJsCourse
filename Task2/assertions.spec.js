@@ -159,8 +159,14 @@ describe('DataTransform', () => {
             expect(DataTransform.coerceToType('abc', 'array')).toEqual(['a', 'b', 'c']);
         });
 
+        it('error because string converted to object is incorrect', () => {
+            expect(() => {
+                DataTransform.coerceToType('abc', 'object');
+            }).toThrow();
+        });
+
         it('should coerce a string to an object', () => {
-            expect(DataTransform.coerceToType('abc', 'object')).toEqual({ '0': 'a', '1': 'b', '2': 'c' });
+            expect(DataTransform.coerceToType('{"a":1,"b":2}', 'object')).toEqual({ a: 1, b: 2 });
         });
 
         it('should coerce a string to a boolean', () => {

@@ -1,13 +1,7 @@
 const DataTransform = {
   addValues: (a, b) => {
-    console.log(typeof a, typeof b)
     if (typeof a === "number" && typeof b === "number") {
       return a + b;
-    }  else if (
-      (typeof a === "number" && typeof b === "string") ||
-      (typeof a === "string" && typeof b === "number")
-    ) {
-      return String(a) + String(b);
     } else if (typeof a === "boolean" && typeof b === "boolean") {
       return a || b;
     } else if (typeof a === 'bigint' && typeof b === 'bigint'){
@@ -58,6 +52,9 @@ const DataTransform = {
   },
 
   coerceToType: (value, type) => {
+    if(!value){
+      throw new Error("Value is empty");
+    }
     switch (type) {
       case "number":
         return DataTransform.convertToNumber(value);
@@ -91,9 +88,16 @@ const DataTransform = {
 
   _convertToObject: (value, type) => {
     if (typeof value === "string") {
-      const obj = {};
-      for (let i = 0; i < value.length; i++) {
-        obj[i] = value[i];
+      let obj = {};
+      value = value.trim();
+      if (value[0] !== '{' || value[value.length - 1] !== '}') {
+          throw new Error('Invalid JSON string');
+      }
+
+      try {
+          obj = JSON.parse(value);
+      } catch (error) {
+          throw new Error('Invalid JSON string');
       }
       return obj;
     } else if (typeof value === "object") {
