@@ -33,8 +33,10 @@ describe("DataTransform", () => {
       expect(DataTransform.addValues("Hello", " World")).toEqual("Hello World");
     });
 
-    it("should concatenate a number and a string", () => {
-      expect(DataTransform.addValues(5, " World")).toEqual("5 World");
+    it("should throw error when adding number and string", () => {
+      expect(() => {
+        DataTransform.addValues(5, " World");
+      }).toThrow();
     });
     it("should add true and false and return true", () => {
       expect(DataTransform.addValues(true, false)).toEqual(true);

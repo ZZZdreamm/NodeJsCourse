@@ -1,5 +1,6 @@
 const DataTransform = {
   addValues: (a, b) => {
+    console.log(typeof a, typeof b)
     if (typeof a === "number" && typeof b === "number") {
       return a + b;
     } else if (typeof a === "boolean" && typeof b === "boolean") {
@@ -11,7 +12,7 @@ const DataTransform = {
     } else if (Array.isArray(a) && !Array.isArray(b)){
       a.push(b);
       return a;
-    } else if (typeof a === "string" || typeof b === "string") {
+    } else if (typeof a === "string" && typeof b === "string") {
       return a + b
     } else {
       throw new Error("Addition not possible for given types");
