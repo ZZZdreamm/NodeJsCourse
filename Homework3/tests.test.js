@@ -154,7 +154,7 @@ describe("Function Compositions", () => {
 
     it("Special characters", () => {
       const value = filterUniqueWords("hello, world hello");
-      expect(value).toEqual(["hello,", "world", "hello"]);
+      expect(value).toEqual(["hello", "hello,", "world"]);
     });
   });
 

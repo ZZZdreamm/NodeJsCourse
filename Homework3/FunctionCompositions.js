@@ -26,8 +26,9 @@ function filterUniqueWords(string){
     const toLowerCase = (str) => str.toLowerCase();
     const splitString = (str) => str.split(' ');
     const uniqueWords = (array) => array.filter((word, index, arr) => arr.indexOf(word) === index);
+    const sortWords = (array) => array.sort();
     const compose = (...funcs) => (x) => funcs.reduceRight((acc, fn) => fn(acc), x);
-    return compose(uniqueWords, splitString, toLowerCase)(string);
+    return compose(sortWords, uniqueWords, splitString, toLowerCase)(string);
 }
 
 function getAverageGrade(students){
