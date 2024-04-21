@@ -13,6 +13,8 @@ class Student extends Person {
 }
 
 function getFullName(person){
+    if(!person.firstName || !person.lastName) throw new Error('Invalid input');
+    if(typeof person.firstName !== 'string' || typeof person.lastName !== 'string') throw new Error('Invalid input');
     const names = [person.firstName, person.lastName].filter(name => name)
     return names.join(' ');
 }
@@ -21,11 +23,22 @@ function filterUniqueWords(string){
     if (string.trim() === '') {
         return [];
     }
-    return string.split(' ').filter((word, index, array) => array.indexOf(word) === index);
+    const toLowerCase = (str) => str.toLowerCase();
+    const splitString = (str) => str.split(' ');
+    const uniqueWords = (array) => array.filter((word, index, arr) => arr.indexOf(word) === index);
+    const compose = (...funcs) => (x) => funcs.reduceRight((acc, fn) => fn(acc), x);
+    return compose(uniqueWords, splitString, toLowerCase)(string);
 }
 
 function getAverageGrade(students){
-    return students.reduce((total, student) => total + student.grades.reduce((total, grade) => total + grade, 0) / student.grades.length, 0) / students.length;
+    if (students.length === 0) {
+        return NaN;
+    }
+    const average = (arr) => arr.reduce((total, val) => total + val, 0) / arr.length;
+    const gradesAverage = (student) => average(student.grades);
+    const studentsAverage = (arr) => average(arr.map(gradesAverage));
+
+    return studentsAverage(students);
 }
 
 
