@@ -5,11 +5,11 @@ class Product {
     }
 }
 
-function calculateDiscountedPrice(productsArray, discountsArray){
+function calculateDiscountedPrice(productsArray, discount){
     return productsArray.map((product, index) => {
         return {
             name: product.name,
-            price: product.price - (product.price * discountsArray[index])
+            price: product.price - (product.price * discount)
         }
     });
 }
