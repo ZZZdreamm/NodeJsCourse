@@ -156,6 +156,16 @@ describe("Function Compositions", () => {
       const value = filterUniqueWords("hello, world hello");
       expect(value).toEqual(["hello", "hello,", "world"]);
     });
+
+    it("Case sensitive", () => {
+      const value = filterUniqueWords("hello Hello", true);
+      expect(value).toEqual(["Hello", "hello"]);
+    });
+
+    it("Case insensitive", () => {
+      const value = filterUniqueWords("hello Hello", false);
+      expect(value).toEqual(["hello"]);
+    });
   });
 
   describe("GetAverageGrade", () => {

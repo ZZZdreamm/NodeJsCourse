@@ -19,7 +19,7 @@ function getFullName(person){
     return names.join(' ');
 }
 
-function filterUniqueWords(string){
+function filterUniqueWords(string, caseSensitive = false){
     if (string.trim() === '') {
         return [];
     }
@@ -28,6 +28,7 @@ function filterUniqueWords(string){
     const uniqueWords = (array) => array.filter((word, index, arr) => arr.indexOf(word) === index);
     const sortWords = (array) => array.sort();
     const compose = (...funcs) => (x) => funcs.reduceRight((acc, fn) => fn(acc), x);
+    if(caseSensitive) return compose(sortWords, uniqueWords, splitString)(string);
     return compose(sortWords, uniqueWords, splitString, toLowerCase)(string);
 }
 
