@@ -6,7 +6,7 @@ class Product {
 }
 
 function calculateDiscountedPrice(productsArray, discount){
-    return productsArray.map((product, index) => {
+    return productsArray.map((product) => {
         return {
             name: product.name,
             price: product.price - (product.price * discount)

@@ -13,7 +13,6 @@ function repeatFunction(func, numberOfRepetitions) {
   if(typeof numberOfRepetitions !== "number" || numberOfRepetitions < 0) {
     throw new Error('numberOfRepetitions should be greater than or equal to 0');
   }
-  console.log(typeof numberOfRepetitions);
   return function () {
     let i = 0;
     while (i !== numberOfRepetitions) {
