@@ -129,8 +129,6 @@ describe("Function Compositions", () => {
         getFullName("Kacper Kowalski");
       }).toThrow();
     });
-
-
   });
 
   describe("FilterUniqueWords", () => {
@@ -243,6 +241,17 @@ describe("Higher Order Components", () => {
         repeatFunction(() => {
           counter++;
         }, -1)();
+      }).toThrowError(
+        "numberOfRepetitions should be greater than or equal to 0"
+      );
+    });
+
+    it("String", () => {
+      let counter = 0;
+      expect(() => {
+        repeatFunction(() => {
+          counter++;
+        }, "3")();
       }).toThrowError(
         "numberOfRepetitions should be greater than or equal to 0"
       );

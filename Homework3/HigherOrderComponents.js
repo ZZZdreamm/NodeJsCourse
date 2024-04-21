@@ -10,6 +10,10 @@ function createCounter() {
 }
 
 function repeatFunction(func, numberOfRepetitions) {
+  if(typeof numberOfRepetitions !== "number" || numberOfRepetitions < 0) {
+    throw new Error('numberOfRepetitions should be greater than or equal to 0');
+  }
+  console.log(typeof numberOfRepetitions);
   return function () {
     let i = 0;
     while (i !== numberOfRepetitions) {
@@ -19,8 +23,6 @@ function repeatFunction(func, numberOfRepetitions) {
   };
 }
 
-let counter = 0;
-repeatFunction(() => counter++, 3)();
 
 module.exports = {
   createCounter,
