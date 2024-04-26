@@ -87,7 +87,10 @@ function deleteNonConfigurable(product, propertyName) {
 /// Task 3
 console.log("\nTask 3");
 
-// I don't know if using classes was allowed in this task
+// I don't know if using classes was allowed in this task that's why I used object literals
+
+
+
 // class BankAccount {
 //     constructor(balance = 1000) {
 //         this.balance = balance;
