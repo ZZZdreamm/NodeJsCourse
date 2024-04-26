@@ -35,6 +35,7 @@ person.updateInfo = function (newInfo) {
 
 Object.defineProperty(person, "address", {
   value: {},
+  writable: true,
   enumerable: false,
   configurable: false,
 });
@@ -89,8 +90,6 @@ console.log("\nTask 3");
 
 // I don't know if using classes was allowed in this task that's why I used object literals
 
-
-
 // class BankAccount {
 //     constructor(balance = 1000) {
 //         this.balance = balance;
@@ -126,9 +125,9 @@ const bankAccount = {
     this.balance = value;
   },
 
-  transfer: function (otherAccount, amount) {
-    if (this.balance >= amount) {
-      this.balance -= amount;
+  transfer: function (firstAccount, otherAccount, amount) {
+    if (firstAccount.balance >= amount) {
+      firstAccount.balance -= amount;
       otherAccount.balance += amount;
     } else {
       throw new Error("Not enough balance");
@@ -238,11 +237,26 @@ const observedPerson = observeObject(person, (property, action) => {
 console.log("\nTask 6");
 
 // I am not sure if usage of sctructuredClone built-in function is allowed
-function deepCloneObject(object) {
-  const clone = {};
+function deepCloneObject(object, clonedObjects = new WeakMap()) {
+  if (clonedObjects.has(object)) {
+    return clonedObjects.get(object);
+  }
+
+  const clone = Array.isArray(object) ? [] : {};
+
+  clonedObjects.set(object, clone);
+
   for (let key in object) {
-    if (typeof object[key] === "object" && object[key] !== null) {
-      clone[key] = deepCloneObject(object[key]);
+    if (Array.isArray(object[key])) {
+      clone[key] = object[key].map((item) => {
+        if (typeof item === "object" && item !== null) {
+          return deepCloneObject(item, clonedObjects);
+        } else {
+          return item;
+        }
+      });
+    } else if (typeof object[key] === "object" && object[key] !== null) {
+      clone[key] = deepCloneObject(object[key], clonedObjects);
     } else {
       clone[key] = object[key];
     }
@@ -267,6 +281,18 @@ const obj1 = {
     },
   ],
 };
+
+// const obj2 = {
+//   a: 1,
+//   b: {},
+// };
+// const obj3 = {
+//   a: 2,
+//   b: obj2,
+// };
+// obj2.b = obj3;
+
+// const circularDeepClone = deepCloneObject(obj2);
 
 // const deepClone = deepCloneObject(obj1);
 // deepClone.b.c = 5;

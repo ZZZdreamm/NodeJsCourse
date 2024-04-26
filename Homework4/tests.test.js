@@ -25,6 +25,8 @@ describe("Testing functions", () => {
       person.updateInfo({ age: 40, email: "new.email@gmail.com" });
       expect(person.age).toBe(40);
       expect(person.email).toBe("new.email@gmail.com");
+      person.address = "Yerevan";
+      expect(person.address).toBe("Yerevan");
     });
   });
   describe("Task 2", () => {
@@ -45,7 +47,7 @@ describe("Testing functions", () => {
       bankAccount.balance = 1000;
       expect(bankAccount.balance).toBe(1000);
       expect(otherAccount.balance).toBe(2000);
-      bankAccount.transfer(otherAccount, 500);
+      bankAccount.transfer(bankAccount, otherAccount, 500);
       expect(bankAccount.balance).toBe(500);
       expect(otherAccount.balance).toBe(2500);
     });
@@ -93,6 +95,23 @@ describe("Testing functions", () => {
       expect(deepClone.e[0].f.h).toBe(7);
       expect(obj1.b.c).toBe(2);
       expect(obj1.e[0].f.h).toBe(5);
+    });
+
+    it("Deep cloned object - circular dependency", () => {
+      const obj2 = {
+        a: 1,
+        b: {},
+      };
+      const obj3 = {
+        a: 2,
+        b: obj2,
+      };
+      obj2.b = obj3;
+      const deepClone = deepCloneObject(obj2);
+      deepClone.b.a = 3;
+      expect(deepClone).not.toBe(obj2);
+      expect(obj2.b.a).toBe(2);
+      expect(deepClone.b.a).toBe(3);
     });
   });
   describe("Task 7", () => {
