@@ -90,56 +90,57 @@ console.log("\nTask 3");
 
 // I don't know if using classes was allowed in this task that's why I used object literals
 
-// class BankAccount {
-//     constructor(balance = 1000) {
-//         this.balance = balance;
-//     }
-//     get formattedPrice() {
-//         return `$${this.balance}`;
-//     }
-
-//     set formattedPrice(value) {
-//         this.balance = value;
-//     }
-
-//     transfer(otherAccount, amount) {
-//         if (this.balance >= amount) {
-//             this.balance -= amount;
-//             otherAccount.balance += amount;
-//         } else {
-//             throw new Error("Not enough balance");
-//         }
-//     }
-// }
-
-// const bankAccount = new BankAccount(1000);
-
-const bankAccount = {
-  balance: 1000,
-
-  get formattedPrice() {
-    return `$${this.balance}`;
-  },
-
-  set formattedPrice(value) {
-    this.balance = value;
-  },
-
-  transfer: function (firstAccount, otherAccount, amount) {
-    if (firstAccount.balance >= amount) {
-      firstAccount.balance -= amount;
-      otherAccount.balance += amount;
-    } else {
-      throw new Error("Not enough balance");
+class BankAccount {
+    constructor(balance) {
+        this.balance = balance;
     }
-  },
-};
+    get formattedPrice() {
+        return `$${this.balance}`;
+    }
 
-const otherAccount = {
-  balance: 2000,
-};
+    set formattedPrice(value) {
+        this.balance = value;
+    }
 
-otherAccount.__proto__ = bankAccount;
+    transfer(bankAccount, otherAccount, amount) {
+        if (bankAccount.balance >= amount) {
+          bankAccount.balance -= amount;
+            otherAccount.balance += amount;
+        } else {
+            throw new Error("Not enough balance");
+        }
+    }
+}
+
+const bankAccount = new BankAccount(1000);
+const otherAccount = new BankAccount(2000);
+
+// const bankAccount = {
+//   balance: 1000,
+
+//   get formattedPrice() {
+//     return `$${this.balance}`;
+//   },
+
+//   set formattedPrice(value) {
+//     this.balance = value;
+//   },
+
+//   transfer: function (firstAccount, otherAccount, amount) {
+//     if (firstAccount.balance >= amount) {
+//       firstAccount.balance -= amount;
+//       otherAccount.balance += amount;
+//     } else {
+//       throw new Error("Not enough balance");
+//     }
+//   },
+// };
+
+// const otherAccount = {
+//   balance: 2000,
+// };
+
+// otherAccount.__proto__ = bankAccount;
 
 // console.log(bankAccount.formattedPrice);
 // bankAccount.formattedPrice = 2000;
