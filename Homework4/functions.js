@@ -288,14 +288,30 @@ function validateObject(obj, schema) {
     if (schema[key].validate && !schema[key].validate(obj[key])) {
       return false;
     }
+    // Check for nested objects
+    if (schema[key].children) {
+      if (!validateObject(obj[key], schema[key].children)) {
+        return false;
+      }
+    }
   }
   return true;
 }
 
 const schema = {
   name: {
-    type: "string",
+    type: "object",
     required: true,
+    children: {
+      firstName: {
+        type: "string",
+        required: true,
+      },
+      lastName: {
+        type: "string",
+        required: true,
+      },
+    },
   },
   age: {
     type: "number",

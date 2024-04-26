@@ -106,14 +106,14 @@ describe("Testing functions", () => {
     });
     it("Validate object - missing property", () => {
       const obj = {
-        name: "John",
+        name: { firstName: "John", lastName: "Doe" },
         age: 30,
       };
       expect(validateObject(obj, schema)).toBe(false);
     });
     it("Validate object - additional validation rule", () => {
       const obj = {
-        name: "John",
+        name: { firstName: "John", lastName: "Doe" },
         age: 30,
         email: "game.gmail.com",
       };
@@ -121,7 +121,7 @@ describe("Testing functions", () => {
     });
     it("Validate object - correct object", () => {
       const obj = {
-        name: "John",
+        name: { firstName: "John", lastName: "Doe" },
         age: 30,
         email: "gamer@gmail.com",
       };
