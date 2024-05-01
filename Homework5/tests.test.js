@@ -8,23 +8,29 @@ describe('Test functions', () => {
             const array = [
                 { name: 'John', age: 20 },
                 { name: 'Jane', age: 20 },
-                { name: 'John', age: 25 },
                 { name: 'Jane', age: 25 },
             ];
             const callback = (item) => item.name;
             const expected = [
                 { name: 'John', age: 20 },
-                { name: 'Jane', age: 20 },
             ];
             const result = customFilterUnique(array, callback);
 
             expect(result).toEqual(expected);
         });
 
-        it('rest left from division by 2', () => {
+        it('rest left from division by 2 duplicates', () => {
             const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
             const callback = (item) => item % 2;
-            const expected = [1, 2];
+            const expected = [];
+            const result = customFilterUnique(array, callback);
+
+            expect(result).toEqual(expected);
+        });
+        it('rest left from division by 2 unique', () => {
+            const array = [1, 2, 3, 4, 5, 6];
+            const callback = (item) => item % 5;
+            const expected = [2, 3, 4, 5];
             const result = customFilterUnique(array, callback);
 
             expect(result).toEqual(expected);
@@ -41,7 +47,7 @@ describe('Test functions', () => {
             expect(result).toEqual(expected);
         });
     });
-    
+
     describe("Task 4", () => {
         it("intersection of two arrays", () => {
             const array1 = [1, 2, 3, 4, 5];
