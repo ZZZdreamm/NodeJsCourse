@@ -1,6 +1,3 @@
-import { DATABASE_FILENAME, BOOKSTORE_STRUCTURE } from "./constants.mjs";
-import { writeJSONFile, readJSONFile } from "./database.mjs";
-
 const exampleBooksData = [
   {
     title: "The Great Gatsby",
@@ -59,36 +56,4 @@ const exampleUsersData = [
   },
 ];
 
-function setupDatabase(callback) {
-  writeJSONFile(DATABASE_FILENAME, BOOKSTORE_STRUCTURE, async (writeErr) => {
-    if (writeErr) {
-      // Handle write error
-    }
-    readJSONFile(DATABASE_FILENAME, async (err, jsonData) => {
-      if (err) {
-        // Handle error
-      } else {
-        jsonData.books = exampleBooksData;
-        jsonData.users = exampleUsersData;
-        writeJSONFile(DATABASE_FILENAME, jsonData, (writeErr) => {
-          if (writeErr) {
-            console.error(writeErr);
-          } else {
-            callback();
-          }
-        });
-      }
-    });
-  });
-}
-
-function clearDatabase() {
-  writeJSONFile(DATABASE_FILENAME, BOOKSTORE_STRUCTURE, (writeErr) => {
-    if (writeErr) {
-      // Handle write error
-    } else {
-    }
-  });
-}
-
-export { setupDatabase, clearDatabase };
+export { exampleBooksData, exampleUsersData };

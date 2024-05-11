@@ -1,159 +1,205 @@
-import fs from "fs";
-import { Book, ScienceBook, FantasyBook, User } from "./classes.mjs";
+import { BookDTO, ScienceBook, FantasyBook, User } from "./models.mjs";
+import { exampleBooksData } from "./testSetup.mjs";
+import { DEFAULT_POOL } from "./constants.mjs";
 
-// Function to read data from a JSON file
-function readJSONFile(filename, callback) {
-  fs.readFile(filename, "utf8", (err, data) => {
-    if (err) {
-      console.error(`Error reading ${filename}: ${err}`);
-      return callback(err);
-    }
+const DATABASE_MESSAGE_PREFIX = "\x1b[32mDATABASE:";
+const DATABASE_MESSAGE_SUFFIX = "\x1b[0m";
+
+class Database {
+  constructor() {
+    this.pool = DEFAULT_POOL;
+    this.client = null;
+  }
+
+  async connectDatabase() {
     try {
-      const json = JSON.parse(data);
-      callback(null, json);
-    } catch (parseError) {
-      console.error(`Error parsing JSON in ${filename}: ${parseError}`);
-      callback(parseError);
-    }
-  });
-}
+      this.client = await this.pool.connect();
 
-// Function to write data to a JSON file
-function writeJSONFile(filename, data, callback) {
-  const jsonData = JSON.stringify(data, null, 2);
-  fs.writeFile(filename, jsonData, "utf8", (err) => {
-    if (err) {
-      console.error(`Error writing to ${filename}: ${err}`);
-      return callback(err);
-    }
-    callback(null);
-  });
-}
+      // Create books table
+      await this.client.query(`
+        CREATE TABLE IF NOT EXISTS books (
+          title TEXT,
+          author TEXT,
+          isbn TEXT PRIMARY KEY,
+          price DECIMAL,
+          availability BOOLEAN,
+          genre TEXT
+        )`);
 
-// Append new user
-function appendUser(newUser, filename) {
-  readJSONFile(filename, (err, jsonData) => {
-    if (err) {
-      // Handle error
-    } else {
-      if (jsonData.users.find((user) => user.userId === newUser.userId)) {
-        console.log("User already exists.");
-        return;
-      }
-      jsonData.users.push(newUser);
-      writeJSONFile(filename, jsonData, (writeErr) => {
-        if (writeErr) {
-          // Handle write error
-        } else {
-          console.log("User added successfully.");
-        }
-      });
-    }
-  });
-}
+      this.logMessage("Books table created successfully");
 
-// Append new book
-function appendBook(newBook, filename) {
-  readJSONFile(filename, (err, jsonData) => {
-    if (err) {
-      // Handle error
-    } else {
-      if (jsonData.books.find((book) => book.isbn === newBook.isbn)) {
-        console.log("Book already exists.");
-        return;
-      }
-      jsonData.books.push(newBook);
-      writeJSONFile(filename, jsonData, (writeErr) => {
-        if (writeErr) {
-          // Handle write error
-        } else {
-          console.log("Book added successfully.");
-        }
-      });
-    }
-  });
-}
+      // Create users table
+      await this.client.query(`
+        CREATE TABLE IF NOT EXISTS users (
+          name TEXT,
+          email TEXT,
+          userId INT PRIMARY KEY
+        )`);
 
-function removeUser(user, filename) {
-  readJSONFile(filename, (err, jsonData) => {
-    if (err) {
-      // Handle error
-    } else {
-      jsonData.users = jsonData.users.filter((u) => u.userId !== user.userId);
-      writeJSONFile(filename, jsonData, (writeErr) => {
-        if (writeErr) {
-          // Handle write error
-        } else {
-          console.log("User removed successfully.");
-        }
-      });
+      this.logMessage("Users table created successfully");
+    } catch (err) {
+      console.error(`Error creating tables: ${err}`);
     }
-  });
-}
+  }
 
-function removeBook(book, filename) {
-  readJSONFile(filename, (err, jsonData) => {
-    if (err) {
-      // Handle error
-    } else {
-      jsonData.books = jsonData.books.filter((b) => b.isbn !== book.isbn);
-      writeJSONFile(filename, jsonData, (writeErr) => {
-        if (writeErr) {
-          // Handle write error
-        } else {
-          console.log("Book removed successfully.");
-        }
-      });
-    }
-  });
-}
-
-function getDataFromDatabase(databaseName, callback) {
-  readJSONFile(databaseName, (err, jsonData) => {
-    if (err) {
-      // Handle error
-    } else {
+  async searchBookByProperty(value, property) {
+    try {
+      const queryText = `SELECT * FROM books WHERE ${property} = $1`;
+      const result = await this.client.query(queryText, [value]);
       const books = [];
-      jsonData.books?.forEach((book) => {
-        if (book.genre === "Science") {
+      result.rows.forEach((row) => {
+        if (row.genre === "Science")
           books.push(
             new ScienceBook(
-              book.title,
-              book.author,
-              book.isbn,
-              book.price,
-              book.availability
+              row.title,
+              row.author,
+              row.isbn,
+              row.price,
+              row.availability,
             )
           );
-        } else if (book.genre === "Fantasy") {
+        else if (row.genre === "Fantasy")
           books.push(
             new FantasyBook(
-              book.title,
-              book.author,
-              book.isbn,
-              book.price,
-              book.availability
+              row.title,
+              row.author,
+              row.isbn,
+              row.price,
+              row.availability,
             )
           );
-        } else {
+        else
           books.push(
-            new Book(
-              book.title,
-              book.author,
-              book.isbn,
-              book.price,
-              book.availability
+            new BookDTO(
+              row.title,
+              row.author,
+              row.isbn,
+              row.price,
+              row.availability,
             )
           );
-        }
       });
-      const users = [];
-      jsonData.users?.forEach((user) => {
-        users.push(new User(user.name, user.email, user.userId));
-      });
-      callback(books, users);
+      return books;
+    } catch (err) {
+      console.error(`Error searching book: ${err}`);
     }
-  });
+  }
+
+  async addUser(newUser) {
+    try {
+      const result = await this.client.query(
+        "INSERT INTO users(name, email, userId) VALUES($1, $2, $3)",
+        [newUser.name, newUser.email, newUser.userId]
+      );
+      this.logMessage("User added successfully");
+    } catch (err) {
+      console.error(`Error inserting user: ${err}`);
+    }
+  }
+
+  async addBook(newBook) {
+    try {
+      const result = await this.client.query(
+        "INSERT INTO books(title, author, isbn, price, availability, genre) VALUES($1, $2, $3, $4, $5, $6)",
+        [
+          newBook.title,
+          newBook.author,
+          newBook.isbn,
+          newBook.price,
+          newBook.availability,
+          newBook.genre,
+        ]
+      );
+      this.logMessage("Book added successfully");
+    } catch (err) {
+      console.error(`Error inserting book: ${err}`);
+    }
+  }
+
+  async updateUser(user) {
+    try {
+      const result = await this.client.query(
+        "UPDATE users SET name = $1, email = $2 WHERE userId = $3",
+        [user.name, user.email, user.userId]
+      );
+      this.logMessage("User updated successfully");
+    } catch (err) {
+      console.error(`Error updating user: ${err}`);
+    }
+  }
+
+  async updateBook(book) {
+    try {
+      const result = await this.client.query(
+        "UPDATE books SET title = $1, author = $2, price = $3, availability = $4, genre = $5 WHERE isbn = $6",
+        [
+          book.title,
+          book.author,
+          book.price,
+          book.availability,
+          book.genre,
+          book.isbn,
+        ]
+      );
+      this.logMessage("Book updated successfully");
+    } catch (err) {
+      console.error(`Error updating book: ${err}`);
+    }
+  }
+
+  async removeUser(user) {
+    try {
+      const result = await this.client.query(
+        "DELETE FROM users WHERE userId = $1",
+        [user.userId]
+      );
+      this.logMessage("User removed successfully");
+    } catch (err) {
+      console.error(`Error removing user: ${err}`);
+    }
+  }
+
+  async removeBook(book) {
+    try {
+      const result = await this.client.query(
+        "DELETE FROM books WHERE isbn = $1",
+        [book.isbn]
+      );
+      this.logMessage("Book removed successfully");
+    } catch (err) {
+      console.error(`Error removing book: ${err}`);
+    }
+  }
+
+  async populateDatabase() {
+    try {
+      let counter = 0;
+      for (const book of exampleBooksData) {
+        await this.addBook(book);
+        counter++;
+      }
+    } catch (err) {
+      console.error(`Error populating database: ${err}`);
+    }
+  }
+
+  async clearDatabase() {
+    try {
+      const resultBooks = await this.client.query("DROP TABLE IF EXISTS books");
+      const resultUsers = await this.client.query("DROP TABLE IF EXISTS users");
+      this.logMessage("Tables dropped successfully");
+      this.client.release();
+    } catch (err) {
+      console.error(`Error dropping tables: ${err}`);
+    }
+  }
+
+
+  logMessage(message) {
+    console.log(
+      `${DATABASE_MESSAGE_PREFIX} ${message} ${DATABASE_MESSAGE_SUFFIX}`
+    );
+  }
 }
 
-export { appendUser, appendBook, removeUser, removeBook, getDataFromDatabase, writeJSONFile, readJSONFile };
+export { Database };
