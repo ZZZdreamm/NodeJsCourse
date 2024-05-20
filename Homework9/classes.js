@@ -141,7 +141,7 @@ class Graph {
     if (!this.adjacencyList[vertex1]) this.addVertex(vertex1);
     if (!this.adjacencyList[vertex2]) this.addVertex(vertex2);
     this.adjacencyList[vertex1].push({ node: vertex2, weight });
-    this.adjacencyList[vertex2].push({ node: vertex1, weight }); // For undirected graph
+    this.adjacencyList[vertex2].push({ node: vertex1, weight }); 
   }
 
   depthFirstSearch(start) {

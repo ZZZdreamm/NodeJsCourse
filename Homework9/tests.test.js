@@ -89,76 +89,62 @@ describe("Binary Tree class", () => {
   });
 });
 
-describe("Graph class", () => {
-  // test("addVertex method", () => {
-  //   const graph = new Graph();
-  //   graph.addVertex("A");
-  //   graph.addVertex("B");
-  //   graph.addVertex("C");
-  //   expect(graph.vertices).toEqual(["A", "B", "C"]);
-  // });
-  // test("addEdge method", () => {
-  //   const graph = new Graph();
-  //   graph.addVertex("A");
-  //   graph.addVertex("B");
-  //   graph.addVertex("C");
-  //   graph.addEdge("A", "B");
-  //   graph.addEdge("B", "C");
-  //   expect(graph.edges).toEqual({ A: ["B"], B: ["C"], C: [] });
-  // });
-  // test("removeVertex method", () => {
-  //   const graph = new Graph();
-  //   graph.addVertex("A");
-  //   graph.addVertex("B");
-  //   graph.addVertex("C");
-  //   graph.addEdge("A", "B");
-  //   graph.addEdge("B", "C");
-  //   graph.removeVertex("B");
-  //   expect(graph.vertices).toEqual(["A", "C"]);
-  //   expect(graph.edges).toEqual({ A: [], C: [] });
-  // });
-  // test("removeEdge method", () => {
-  //   const graph = new Graph();
-  //   graph.addVertex("A");
-  //   graph.addVertex("B");
-  //   graph.addVertex("C");
-  //   graph.addEdge("A", "B");
-  //   graph.addEdge("B", "C");
-  //   graph.removeEdge("A", "B");
-  //   expect(graph.edges).toEqual({ A: [], B: ["C"], C: [] });
-  // });
-  // test("depthFirstSearch method", () => {
-  //   const graph = new Graph();
-  //   graph.addVertex("A");
-  //   graph.addVertex("B");
-  //   graph.addVertex("C");
-  //   graph.addVertex("D");
-  //   graph.addVertex("E");
-  //   graph.addVertex("F");
-  //   graph.addEdge("A", "B");
-  //   graph.addEdge("A", "C");
-  //   graph.addEdge("B", "D");
-  //   graph.addEdge("C", "E");
-  //   graph.addEdge("D", "F");
-  //   expect(graph.depthFirstSearch("A")).toEqual(["A", "B", "D", "F", "C", "E"]);
-  // });
-  // test("breadthFirstSearch method", () => {
-  //   const graph = new Graph();
-  //   graph.addVertex("A");
-  //   graph.addVertex("B");
-  //   graph.addVertex("C");
-  //   graph.addVertex("D");
-  //   graph.addVertex("E");
-  //   graph.addVertex("F");
-  //   graph.addEdge("A", "B");
-  //   graph.addEdge("A", "C");
-  //   graph.addEdge("B", "D");
-  //   graph.addEdge("C", "E");
-  //   graph.addEdge("D", "F");
-  //   expect(graph.breadthFirstSearch("A")).toEqual(["A", "B", "C", "D", "E", "F"]);
-  //   }
-  // );
+describe('Graph class', () => {
+  let graph;
 
+  beforeEach(() => {
+    graph = new Graph();
+  });
+
+  test('should add a vertex', () => {
+    graph.addVertex('A');
+    expect(graph.adjacencyList).toHaveProperty('A');
+    expect(graph.adjacencyList['A']).toEqual([]);
+  });
+
+  test('should add an edge', () => {
+    graph.addEdge('A', 'B', 2);
+    expect(graph.adjacencyList['A']).toContainEqual({ node: 'B', weight: 2 });
+    expect(graph.adjacencyList['B']).toContainEqual({ node: 'A', weight: 2 });
+  });
+
+  test('should perform depth first search', () => {
+    graph.addEdge('A', 'B');
+    graph.addEdge('A', 'C');
+    graph.addEdge('B', 'D');
+    graph.addEdge('C', 'E');
+    graph.addEdge('D', 'E');
+    expect(graph.depthFirstSearch('A')).toEqual(expect.arrayContaining(['A', 'B', 'D', 'E', 'C']));
+  });
+
+  test('should perform breadth first search', () => {
+    graph.addEdge('A', 'B');
+    graph.addEdge('A', 'C');
+    graph.addEdge('B', 'D');
+    graph.addEdge('C', 'E');
+    graph.addEdge('D', 'E');
+    expect(graph.breadthFirstSearch('A')).toEqual(['A', 'B', 'C', 'D', 'E']);
+  });
+
+  test('should find the shortest path using Dijkstra\'s algorithm', () => {
+    graph.addEdge('A', 'B', 1);
+    graph.addEdge('A', 'C', 4);
+    graph.addEdge('B', 'C', 2);
+    graph.addEdge('B', 'D', 5);
+    graph.addEdge('C', 'D', 1);
+    expect(graph.dijkstra('A', 'D')).toEqual(['A', 'B', 'C', 'D']);
+  });
+
+  test('should find the shortest path using BFS', () => {
+    graph.addEdge('A', 'B');
+    graph.addEdge('A', 'C');
+    graph.addEdge('B', 'D');
+    graph.addEdge('C', 'E');
+    graph.addEdge('D', 'E');
+    graph.addEdge('D', 'F');
+    graph.addEdge('E', 'F');
+    expect(graph.bfsShortestPath('A', 'F')).toEqual(['A', 'B', 'D', 'F']);
+  });
 });
 
 describe("Linked List class", () => {
