@@ -1,4 +1,4 @@
-import { User, Cart } from "./models.mjs";
+import { Cart } from "./models.mjs";
 import { Database } from "./database.mjs";
 import { RunManager } from "./runManager.mjs";
 
