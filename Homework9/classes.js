@@ -61,8 +61,9 @@ class TreeNode {
 }
 
 class BinaryTree {
-  constructor() {
+  constructor(values = []) {
     this.root = null;
+    values.forEach((value) => this.insertNode(value));
   }
 
   insertNode(value, node = this.root) {
@@ -97,32 +98,13 @@ class BinaryTree {
       : this.searchNode(value, node.right);
   }
 
-  inOrderTraversal(node, result = []) {
+  inOrderTraversal(node = this.root, result = []) {
     if (node) {
       this.inOrderTraversal(node.left, result);
       result.push(node.value);
       this.inOrderTraversal(node.right, result);
     }
     return result;
-  }
-}
-
-class PriorityQueue {
-  constructor() {
-    this.values = [];
-  }
-
-  enqueue(val, priority) {
-    this.values.push({ val, priority });
-    this.sort();
-  }
-
-  dequeue() {
-    return this.values.shift();
-  }
-
-  sort() {
-    this.values.sort((a, b) => a.priority - b.priority);
   }
 }
 
@@ -141,7 +123,7 @@ class Graph {
     if (!this.adjacencyList[vertex1]) this.addVertex(vertex1);
     if (!this.adjacencyList[vertex2]) this.addVertex(vertex2);
     this.adjacencyList[vertex1].push({ node: vertex2, weight });
-    this.adjacencyList[vertex2].push({ node: vertex1, weight }); 
+    this.adjacencyList[vertex2].push({ node: vertex1, weight });
   }
 
   depthFirstSearch(start) {
@@ -149,7 +131,7 @@ class Graph {
     const visited = {};
     const adjacencyList = this.adjacencyList;
 
-    (function dfs(vertex) {
+    function dfs(vertex) {
       if (!vertex) return null;
       visited[vertex] = true;
       result.push(vertex);
@@ -158,8 +140,9 @@ class Graph {
           return dfs(neighbor.node);
         }
       });
-    })(start);
+    }
 
+    dfs(start);
     return result;
   }
 
@@ -186,30 +169,26 @@ class Graph {
   }
 
   dijkstra(start, finish) {
-    const nodes = new PriorityQueue();
+    const nodes = new Queue();
     const distances = {};
     const previous = {};
-    let path = []; // To return at the end
+    let path = [];
     let smallest;
 
-    // Build initial state
     for (let vertex in this.adjacencyList) {
       if (vertex === start) {
         distances[vertex] = 0;
-        nodes.enqueue(vertex, 0);
+        nodes.enqueue({val: vertex,priority: 0});
       } else {
         distances[vertex] = Infinity;
-        nodes.enqueue(vertex, Infinity);
+        nodes.enqueue({val: vertex, priority: Infinity});
       }
       previous[vertex] = null;
     }
 
-    // As long as there is something to visit
-    while (nodes.values.length) {
+    while (nodes.items.length) {
       smallest = nodes.dequeue().val;
       if (smallest === finish) {
-        // We are done
-        // Build path to return at the end
         while (previous[smallest]) {
           path.push(smallest);
           smallest = previous[smallest];
@@ -225,12 +204,13 @@ class Graph {
           if (candidate < distances[nextNeighbor]) {
             distances[nextNeighbor] = candidate;
             previous[nextNeighbor] = smallest;
-            nodes.enqueue(nextNeighbor, candidate);
+            nodes.enqueue({val: nextNeighbor, priority: candidate});
           }
         }
       }
     }
 
+    // Add the start node and reverse order for easier reading
     return path.concat(smallest).reverse();
   }
 
@@ -268,9 +248,10 @@ class LinkedItem {
 }
 
 class LinkedList {
-  constructor() {
+  constructor(values = []) {
     this.head = null;
     this.tail = null;
+    values.forEach((value) => this.insert(value));
   }
   insert(item) {
     const linkedItem = new LinkedItem(item);

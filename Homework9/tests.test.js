@@ -10,8 +10,13 @@ const {
 } = require("./classes.js");
 
 describe("Stack class", () => {
+  let stack = new Stack();
+
+  beforeEach(() => {
+    stack = new Stack();
+  });
+
   test("push and pop methods", () => {
-    const stack = new Stack();
     stack.push(1);
     stack.push(2);
     stack.push(3);
@@ -20,7 +25,6 @@ describe("Stack class", () => {
     expect(stack.pop()).toBe(1);
   });
   test("peek method", () => {
-    const stack = new Stack();
     stack.push(1);
     stack.push(2);
     stack.push(3);
@@ -29,7 +33,6 @@ describe("Stack class", () => {
     expect(stack.peek()).toBe(2);
   });
   test("isEmpty method", () => {
-    const stack = new Stack();
     expect(stack.isEmpty()).toBe(true);
     stack.push(1);
     expect(stack.isEmpty()).toBe(false);
@@ -39,8 +42,13 @@ describe("Stack class", () => {
 });
 
 describe("Queue class", () => {
+  let queue = new Queue();
+
+  beforeEach(() => {
+    queue = new Queue();
+  });
+
   test("enqueue and dequeue methods", () => {
-    const queue = new Queue();
     queue.enqueue(1);
     queue.enqueue(2);
     queue.enqueue(3);
@@ -49,7 +57,6 @@ describe("Queue class", () => {
     expect(queue.dequeue()).toBe(3);
   });
   test("peek method", () => {
-    const queue = new Queue();
     queue.enqueue(1);
     queue.enqueue(2);
     queue.enqueue(3);
@@ -58,7 +65,6 @@ describe("Queue class", () => {
     expect(queue.peek()).toBe(2);
   });
   test("isEmpty method", () => {
-    const queue = new Queue();
     expect(queue.isEmpty()).toBe(true);
     queue.enqueue(1);
     expect(queue.isEmpty()).toBe(false);
@@ -68,8 +74,13 @@ describe("Queue class", () => {
 });
 
 describe("Binary Tree class", () => {
+  let binaryTree = new BinaryTree();
+
+  beforeEach(() => {
+    binaryTree = new BinaryTree();
+  });
+
   test("insert method", () => {
-    const binaryTree = new BinaryTree();
     binaryTree.insertNode(1);
     binaryTree.insertNode(2);
     binaryTree.insertNode(3);
@@ -78,7 +89,6 @@ describe("Binary Tree class", () => {
     expect(binaryTree.root.right.right.value).toBe(3);
   });
   test("search method", () => {
-    const binaryTree = new BinaryTree();
     binaryTree.insertNode(1);
     binaryTree.insertNode(2);
     binaryTree.insertNode(3);
@@ -87,63 +97,76 @@ describe("Binary Tree class", () => {
     expect(binaryTree.searchNode(3)).toBe(true);
     expect(binaryTree.searchNode(4)).toBe(false);
   });
+
+  test("Tree traversal method", () => {
+    binaryTree.insertNode(4);
+    binaryTree.insertNode(5);
+    binaryTree.insertNode(1);
+    binaryTree.insertNode(7);
+    binaryTree.insertNode(2);
+    binaryTree.insertNode(6);
+    binaryTree.insertNode(3);
+    expect(binaryTree.inOrderTraversal()).toEqual([1, 2, 3, 4, 5, 6, 7]);
+  });
 });
 
-describe('Graph class', () => {
+describe("Graph class", () => {
   let graph;
 
   beforeEach(() => {
     graph = new Graph();
   });
 
-  test('should add a vertex', () => {
-    graph.addVertex('A');
-    expect(graph.adjacencyList).toHaveProperty('A');
-    expect(graph.adjacencyList['A']).toEqual([]);
+  test("should add a vertex", () => {
+    graph.addVertex("A");
+    expect(graph.adjacencyList).toHaveProperty("A");
+    expect(graph.adjacencyList["A"]).toEqual([]);
   });
 
-  test('should add an edge', () => {
-    graph.addEdge('A', 'B', 2);
-    expect(graph.adjacencyList['A']).toContainEqual({ node: 'B', weight: 2 });
-    expect(graph.adjacencyList['B']).toContainEqual({ node: 'A', weight: 2 });
+  test("should add an edge", () => {
+    graph.addEdge("A", "B", 2);
+    expect(graph.adjacencyList["A"]).toContainEqual({ node: "B", weight: 2 });
+    expect(graph.adjacencyList["B"]).toContainEqual({ node: "A", weight: 2 });
   });
 
-  test('should perform depth first search', () => {
-    graph.addEdge('A', 'B');
-    graph.addEdge('A', 'C');
-    graph.addEdge('B', 'D');
-    graph.addEdge('C', 'E');
-    graph.addEdge('D', 'E');
-    expect(graph.depthFirstSearch('A')).toEqual(expect.arrayContaining(['A', 'B', 'D', 'E', 'C']));
+  test("should perform depth first search", () => {
+    graph.addEdge("A", "B");
+    graph.addEdge("A", "C");
+    graph.addEdge("B", "D");
+    graph.addEdge("C", "E");
+    graph.addEdge("D", "E");
+    expect(graph.depthFirstSearch("A")).toEqual(
+      expect.arrayContaining(["A", "B", "D", "E", "C"])
+    );
   });
 
-  test('should perform breadth first search', () => {
-    graph.addEdge('A', 'B');
-    graph.addEdge('A', 'C');
-    graph.addEdge('B', 'D');
-    graph.addEdge('C', 'E');
-    graph.addEdge('D', 'E');
-    expect(graph.breadthFirstSearch('A')).toEqual(['A', 'B', 'C', 'D', 'E']);
+  test("should perform breadth first search", () => {
+    graph.addEdge("A", "B");
+    graph.addEdge("A", "C");
+    graph.addEdge("B", "D");
+    graph.addEdge("C", "E");
+    graph.addEdge("D", "E");
+    expect(graph.breadthFirstSearch("A")).toEqual(["A", "B", "C", "D", "E"]);
   });
 
-  test('should find the shortest path using Dijkstra\'s algorithm', () => {
-    graph.addEdge('A', 'B', 1);
-    graph.addEdge('A', 'C', 4);
-    graph.addEdge('B', 'C', 2);
-    graph.addEdge('B', 'D', 5);
-    graph.addEdge('C', 'D', 1);
-    expect(graph.dijkstra('A', 'D')).toEqual(['A', 'B', 'C', 'D']);
+  test("should find the shortest path using Dijkstra's algorithm", () => {
+    graph.addEdge("A", "C", 4);
+    graph.addEdge("A", "B", 1);
+    graph.addEdge("B", "C", 2);
+    graph.addEdge("B", "D", 5);
+    graph.addEdge("C", "D", 1);
+    expect(graph.dijkstra("A", "D")).toEqual(["A", "B", "C", "D"]);
   });
 
-  test('should find the shortest path using BFS', () => {
-    graph.addEdge('A', 'B');
-    graph.addEdge('A', 'C');
-    graph.addEdge('B', 'D');
-    graph.addEdge('C', 'E');
-    graph.addEdge('D', 'E');
-    graph.addEdge('D', 'F');
-    graph.addEdge('E', 'F');
-    expect(graph.bfsShortestPath('A', 'F')).toEqual(['A', 'B', 'D', 'F']);
+  test("should find the shortest path using BFS", () => {
+    graph.addEdge("A", "B");
+    graph.addEdge("A", "C");
+    graph.addEdge("B", "D");
+    graph.addEdge("C", "E");
+    graph.addEdge("D", "E");
+    graph.addEdge("D", "F");
+    graph.addEdge("E", "F");
+    expect(graph.bfsShortestPath("A", "F")).toEqual(["A", "B", "D", "F"]);
   });
 });
 
@@ -178,10 +201,14 @@ describe("Linked List class", () => {
   });
 });
 
-
 describe("MinMaxStack class", () => {
+  let minMaxStack = new MinMaxStack();
+
+  beforeEach(() => {
+    minMaxStack = new MinMaxStack();
+  });
+
   test("push method", () => {
-    const minMaxStack = new MinMaxStack();
     minMaxStack.push(3);
     minMaxStack.push(2);
     minMaxStack.push(1);
@@ -189,7 +216,6 @@ describe("MinMaxStack class", () => {
     expect(minMaxStack.getMax()).toBe(3);
   });
   test("pop method", () => {
-    const minMaxStack = new MinMaxStack();
     minMaxStack.push(3);
     minMaxStack.push(2);
     minMaxStack.push(1);
@@ -197,15 +223,29 @@ describe("MinMaxStack class", () => {
     expect(minMaxStack.getMin()).toBe(2);
     expect(minMaxStack.getMax()).toBe(3);
   });
+  test("getMin method", () => {
+    minMaxStack.push(3);
+    minMaxStack.push(2);
+    minMaxStack.push(1);
+    minMaxStack.push(2);
+    expect(minMaxStack.getMin()).toBe(1);
+  });
+
+  test("getMax method", () => {
+    minMaxStack.push(2);
+    minMaxStack.push(3);
+    minMaxStack.push(2);
+    minMaxStack.push(1);
+    expect(minMaxStack.getMax()).toBe(3);
+  });
 });
 
 describe("isBST function", () => {
   test("valid BST", () => {
-    const node = new TreeNode(2);
-    node.left = new TreeNode(1);
-    node.right = new TreeNode(3);
-    expect(isBST(node)).toBe(true);
+    const binaryTree = new BinaryTree([2, 1, 3]);
+    expect(isBST(binaryTree.root)).toBe(true);
   });
+  // Need to use TreeNodes for that because it is impossible to create invalid BST with BinaryTree class
   test("invalid BST", () => {
     const node = new TreeNode(1);
     node.left = new TreeNode(2);
@@ -216,11 +256,10 @@ describe("isBST function", () => {
 
 describe("hasCycle function", () => {
   test("no cycle", () => {
-    const head = new LinkedItem(1);
-    head.next = new LinkedItem(2);
-    head.next.next = new LinkedItem(3);
-    expect(hasCycle(head)).toBe(false);
+    const linkedList = new LinkedList([1, 2, 3]);
+    expect(hasCycle(linkedList.head)).toBe(false);
   });
+  // Need to use LinkedItems for that because it is impossible to create cycle with LinkedList class
   test("cycle", () => {
     const head = new LinkedItem(1);
     head.next = new LinkedItem(2);
@@ -229,5 +268,3 @@ describe("hasCycle function", () => {
     expect(hasCycle(head)).toBe(true);
   });
 });
-
-
