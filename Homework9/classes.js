@@ -1,21 +1,17 @@
 class Stack {
   constructor() {
-    this.top = null;
     this.storage = [];
   }
   push(value) {
     this.storage.push(value);
-    this.top = value;
   }
 
   pop() {
-    const poppedValue = this.storage.pop();
-    this.top = this.storage[this.storage.length - 1];
-    return poppedValue;
+    return this.storage.pop();
   }
 
   peek() {
-    return this.top;
+    return this.storage[this.storage.length - 1];
   }
 
   isEmpty() {
@@ -108,6 +104,76 @@ class BinaryTree {
   }
 }
 
+
+// Binary Heap used for faster inserting and extracting minimum values for Dijkstra's algorithm
+class BinaryHeap {
+  constructor() {
+    this.values = [];
+  }
+
+  insert(value) {
+    this.values.push(value);
+    this.bubbleUp();
+  }
+
+  bubbleUp() {
+    let index = this.values.length - 1;
+    const value = this.values[index];
+    while (index > 0) {
+      let parentIndex = Math.floor((index - 1) / 2);
+      let parent = this.values[parentIndex];
+      if (value.val >= parent.val) break;
+      this.values[parentIndex] = value;
+      this.values[index] = parent;
+      index = parentIndex;
+    }
+  }
+
+  extractMin() {
+    const min = this.values[0];
+    const end = this.values.pop();
+    if (this.values.length > 0) {
+      this.values[0] = end;
+      this.bubbleDown();
+    }
+    return min;
+  }
+
+  bubbleDown() {
+    let index = 0;
+    const length = this.values.length;
+    const value = this.values[0];
+    while (true) {
+      let leftChildIndex = 2 * index + 1;
+      let rightChildIndex = 2 * index + 2;
+      let leftChild, rightChild;
+      let swap = null;
+
+      if (leftChildIndex < length) {
+        leftChild = this.values[leftChildIndex];
+        if (leftChild.val < value.val) {
+          swap = leftChildIndex;
+        }
+      }
+
+      if (rightChildIndex < length) {
+        rightChild = this.values[rightChildIndex];
+        if (
+          (swap === null && rightChild.val < value.val) ||
+          (swap !== null && rightChild.val < leftChild.val)
+        ) {
+          swap = rightChildIndex;
+        }
+      }
+
+      if (swap === null) break;
+      this.values[index] = this.values[swap];
+      this.values[swap] = value;
+      index = swap;
+    }
+  }
+}
+
 class Graph {
   constructor() {
     this.adjacencyList = {};
@@ -169,7 +235,8 @@ class Graph {
   }
 
   dijkstra(start, finish) {
-    const nodes = new Queue();
+    let nodesLength = 0;
+    const nodes = new BinaryHeap();
     const distances = {};
     const previous = {};
     let path = [];
@@ -178,16 +245,18 @@ class Graph {
     for (let vertex in this.adjacencyList) {
       if (vertex === start) {
         distances[vertex] = 0;
-        nodes.enqueue({val: vertex,priority: 0});
+        nodes.insert({ val: 0, node: vertex });
       } else {
         distances[vertex] = Infinity;
-        nodes.enqueue({val: vertex, priority: Infinity});
+        nodes.insert({ val: Infinity, node: vertex });
       }
+      nodesLength++;
       previous[vertex] = null;
     }
 
-    while (nodes.items.length) {
-      smallest = nodes.dequeue().val;
+    while (nodesLength) {
+      smallest = nodes.extractMin().node;
+      nodesLength--;
       if (smallest === finish) {
         while (previous[smallest]) {
           path.push(smallest);
@@ -204,7 +273,8 @@ class Graph {
           if (candidate < distances[nextNeighbor]) {
             distances[nextNeighbor] = candidate;
             previous[nextNeighbor] = smallest;
-            nodes.enqueue({val: nextNeighbor, priority: candidate});
+            nodes.insert({ val: candidate, node: nextNeighbor });
+            nodesLength++;
           }
         }
       }
@@ -286,10 +356,10 @@ class LinkedList {
   search(value) {
     let current = this.head;
     while (current) {
-      if (current.value === value) return true;
+      if (current.value === value) return current;
       current = current.next;
     }
-    return false;
+    return null;
   }
 }
 

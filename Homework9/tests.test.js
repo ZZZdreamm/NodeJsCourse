@@ -180,15 +180,15 @@ describe("Linked List class", () => {
     expect(linkedList.head.next.value).toBe(2);
     expect(linkedList.head.next.next.value).toBe(3);
   });
-  test("find method", () => {
+  test("search method", () => {
     const linkedList = new LinkedList();
     linkedList.insert(1);
     linkedList.insert(2);
     linkedList.insert(3);
-    expect(linkedList.search(1)).toBe(true);
-    expect(linkedList.search(2)).toBe(true);
-    expect(linkedList.search(3)).toBe(true);
-    expect(linkedList.search(4)).toBe(false);
+    const search = linkedList.search(2);
+    const searchNonExistent = linkedList.search(4);
+    expect(search.value).toBe(2);
+    expect(searchNonExistent).toBe(null);
   });
   test("delete method", () => {
     const linkedList = new LinkedList();
@@ -245,12 +245,10 @@ describe("isBST function", () => {
     const binaryTree = new BinaryTree([2, 1, 3]);
     expect(isBST(binaryTree.root)).toBe(true);
   });
-  // Need to use TreeNodes for that because it is impossible to create invalid BST with BinaryTree class
   test("invalid BST", () => {
-    const node = new TreeNode(1);
-    node.left = new TreeNode(2);
-    node.right = new TreeNode(3);
-    expect(isBST(node)).toBe(false);
+    const binaryTree = new BinaryTree([1, 3])
+    binaryTree.root.left = new TreeNode(2); // Accessed directly to create an invalid BST
+    expect(isBST(binaryTree.root)).toBe(false);
   });
 });
 
@@ -259,12 +257,9 @@ describe("hasCycle function", () => {
     const linkedList = new LinkedList([1, 2, 3]);
     expect(hasCycle(linkedList.head)).toBe(false);
   });
-  // Need to use LinkedItems for that because it is impossible to create cycle with LinkedList class
   test("cycle", () => {
-    const head = new LinkedItem(1);
-    head.next = new LinkedItem(2);
-    head.next.next = new LinkedItem(3);
-    head.next.next.next = head;
-    expect(hasCycle(head)).toBe(true);
+    const linkedList = new LinkedList([1, 2, 3]);
+    linkedList.tail.next = linkedList.head;
+    expect(hasCycle(linkedList.head)).toBe(true);
   });
 });
