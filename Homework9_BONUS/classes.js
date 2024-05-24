@@ -10,7 +10,7 @@ class Node {
 
 class RedBlackTree {
   constructor(listOfValues) {
-    this.nil = new Node(null, "BLACK"); // Sentinel node for representing leaves
+    this.nil = new Node(null, "BLACK"); // Leaves
     this.root = null;
     listOfValues?.forEach((value) => {
       this.insert(value);
