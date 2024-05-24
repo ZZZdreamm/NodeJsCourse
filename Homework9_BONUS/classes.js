@@ -239,15 +239,15 @@ class RedBlackTree {
   }
 
   // Replace subtree rooted at node u with subtree rooted at node v
-  transplant(u, v) {
-    if (u.parent === null) {
-      this.root = v;
-    } else if (u === u.parent.left) {
-      u.parent.left = v;
+  transplant(nodeToBeReplaced, replacingNode) {
+    if (nodeToBeReplaced.parent === null) {
+      this.root = replacingNode;
+    } else if (nodeToBeReplaced === nodeToBeReplaced.parent.left) {
+      nodeToBeReplaced.parent.left = replacingNode;
     } else {
-      u.parent.right = v;
+      nodeToBeReplaced.parent.right = replacingNode;
     }
-    v.parent = u.parent;
+    replacingNode.parent = nodeToBeReplaced.parent;
   }
 
   // Find the node with the given value by going down the tree
@@ -286,7 +286,5 @@ class RedBlackTree {
   }
 }
 
-let tree = new RedBlackTree([10, 20, 30, 15, 25, 35, 12, 14, 11]);
-tree.prettyPrint();
 
 module.exports = { Node, RedBlackTree };
