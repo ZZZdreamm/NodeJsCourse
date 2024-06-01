@@ -1,0 +1,20 @@
+{
+  "person": {
+    "name": "Bob",
+    "age": 35,
+    "contacts": {
+      "email": "bob@example.com",
+      "phone": "123-456-7890"
+    }
+  },
+  "hobbies": ["Reading", "Hiking", "Gaming"],
+  "work": {
+    "title": "Software Developer",
+    "languages": ["JavaScript", "Python"]
+  },
+  "quote": "This is a string with an escape character: \\nNew Line",
+  "nullValue": null,
+  "trueValue": true,
+  "falseValue": false,
+  "numberValue": -1
+}
